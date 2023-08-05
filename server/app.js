@@ -1,10 +1,13 @@
 import express from "express";
 import bodyParser from "body-parser";
+// import * as dbpool from "./db.js";
 import { getShipsService } from "./service/shipService.js";
 import { validateRequestBody } from "./utils/validateRequest.js";
+import cors from "cors";
 
 const app = express();
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -12,9 +15,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get("/listShips", async (req, res) => {
   const pageSize = req.query.pageSize ?? 20;
   const shipsData = await getShipsService(pageSize);
-  res.status(200).json({
-    result: shipsData,
-  });
+  console.log("shipsData:", shipsData);
+  res.status(200).json(shipsData);
 });
 
 // upload a ship data
