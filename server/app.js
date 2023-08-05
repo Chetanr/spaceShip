@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 // import * as dbpool from "./db.js";
-import { getShipsService } from "./service/shipService.js";
+import { getShipService } from "./service/shipService.js";
 import { validateRequestBody } from "./utils/validateRequest.js";
 import cors from "cors";
 
@@ -13,9 +13,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // list all ships
 app.get("/listShips", async (req, res) => {
-  const pageSize = req.query.pageSize ?? 20;
-  const shipsData = await getShipsService(pageSize);
-  console.log("shipsData:", shipsData);
+  // const pageSize = req.query.pageSize ?? 20;
+  const shipsData = await getShipService(req.query.weight, req.query.port);
+  res.status(200).json(shipsData);
+});
+
+app.get("/getShip", async (req, res) => {
+  // const pageSize = req.query.pageSize ?? 20;
+  const shipsData = await getShipService(req.query.weight, req.query.port);
   res.status(200).json(shipsData);
 });
 

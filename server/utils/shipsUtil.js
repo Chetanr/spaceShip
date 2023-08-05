@@ -1,3 +1,5 @@
+import sqlstring from "sqlstring";
+
 export const mapToDbShipObject = (shipData) => {
   return {
     name: shipData.ship_name,
@@ -6,4 +8,21 @@ export const mapToDbShipObject = (shipData) => {
     weight: shipData.weight_kg,
     class: shipData.class,
   };
+};
+
+export const generateWhereClause = (weight, port) => {
+  if (weight && port) {
+    return `WHERE weight = ${sqlstring.escape(
+      weight
+    )} AND WHERE port = ${sqlstring.escape(port)}`;
+  }
+
+  if (weight) {
+    console.log("inside weight");
+    return `WHERE weight LIKE ${sqlstring.escape(weight)}`;
+  }
+
+  if (port) {
+    return `WHERE port = ${sqlstring.escape(port)}`;
+  }
 };
