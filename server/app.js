@@ -1,7 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-// import * as dbpool from "./db.js";
-import { getShipService } from "./service/shipService.js";
+import { getShipService, updateShipWithImage } from "./service/shipService.js";
 import { validateRequestBody } from "./utils/validateRequest.js";
 import cors from "cors";
 
@@ -24,9 +23,9 @@ app.get("/getShip", async (req, res) => {
   res.status(200).json(shipsData);
 });
 
-// upload a ship data
+// upload a ship data with image
 app.post("/ship", validateRequestBody, async (req, res) => {
-  const result = await addShipService(req.body);
+  const result = await updateShipWithImage(req.body);
   res.status(200).json({
     result,
   });

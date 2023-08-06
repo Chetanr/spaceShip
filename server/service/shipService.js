@@ -1,5 +1,4 @@
 import axios from "axios";
-import { schedule } from "node-cron";
 import { generateWhereClause, mapToDbShipObject } from "../utils/shipsUtil.js";
 import dbPool from "../db.js";
 
@@ -36,8 +35,19 @@ export const addShipService = async (shipDetails) => {
     );
 
     return result;
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const updateShipWithImage = async (shipDetails) => {
+  try {
+    const result = await dbPool.query(
+      `UPDATE ship SET image= ${shipDetails.image} WHERE name=${shipDetails.name}`
+    );
+    return result;
+  } catch (error) {
+    console.error(error);
   }
 };
 
