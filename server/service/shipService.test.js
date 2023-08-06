@@ -10,9 +10,14 @@ jest.mock("axios", () => {
 jest.mock("../db.js");
 
 describe("test getShipsService", () => {
-  it("test getShips", async () => {
-    const mockGetShips = jest.spyOn(shipsService, "getShips");
-    await shipsService.getShipsService(1);
-    expect(mockGetShips).not.toBeCalled();
+  it("when data is found in database", async () => {
+    const mockGetShipsFromApi = jest.spyOn(shipsService, "getShipsFromApi");
+    const mockUpdateShipsDataInDb = jest.spyOn(
+      shipsService,
+      "updateShipsDataInDb"
+    );
+    await shipsService.getShipService(1);
+    expect(mockGetShipsFromApi).not.toBeCalled();
+    expect(mockUpdateShipsDataInDb).not.toBeCalled();
   });
 });

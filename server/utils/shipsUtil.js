@@ -18,7 +18,6 @@ export const generateWhereClause = (weight, port) => {
   }
 
   if (weight) {
-    console.log("inside weight");
     return `WHERE weight LIKE ${sqlstring.escape(weight)}`;
   }
 

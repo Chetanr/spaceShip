@@ -51,7 +51,7 @@ export const updateShipWithImage = async (shipDetails) => {
   }
 };
 
-const updateShipsDataInDb = async (shipsData) => {
+export const updateShipsDataInDb = async (shipsData) => {
   // schedule("59 23 * * *", async () => {
   const apiResult = await getShipsFromApi();
   shipsData.map(async (shipData) => {
