@@ -6,10 +6,13 @@ export const getShipsFromApi = async () => {
   return (await axios.get("https://api.spacexdata.com/v3/ships")).data;
 };
 
-export const getShipService = async (weight, port) => {
+export const getShipService = async (weight, port, pageSize) => {
   const WHERE_CLAUSE = generateWhereClause(weight, port);
+  const pageLimit = pageSize ?? 20;
 
-  const rows = await dbPool.query(`SELECT * FROM ship ${WHERE_CLAUSE}`);
+  const rows = await dbPool.query(
+    `SELECT * FROM ship ${WHERE_CLAUSE} LIMIT ${pageLimit}`
+  );
 
   // if no data found in database, fetch data from api
   if (rows && rows.length === 0) {
@@ -17,8 +20,9 @@ export const getShipService = async (weight, port) => {
     updateShipsDataInDb(apiResult);
   }
 
-  const rowsData = await dbPool.query(`SELECT * FROM ship ${WHERE_CLAUSE}`);
-  return rowsData;
+  return await dbPool.query(
+    `SELECT * FROM ship ${WHERE_CLAUSE} LIMIT ${pageLimit}`
+  );
 };
 
 export const addShipService = async (shipDetails) => {
@@ -52,11 +56,8 @@ export const updateShipWithImage = async (shipDetails) => {
 };
 
 export const updateShipsDataInDb = async (shipsData) => {
-  // schedule("59 23 * * *", async () => {
-  const apiResult = await getShipsFromApi();
   shipsData.map(async (shipData) => {
     const shipDbObject = mapToDbShipObject(shipData);
     await addShipService(shipDbObject);
   });
-  // });
 };

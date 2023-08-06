@@ -1,5 +1,10 @@
 import React from "react";
 import { TableCell, TableRow, TableBody } from "@mui/material";
+import styled from "styled-components";
+
+const StyledButton = styled.button`
+  margin-left: 10px;
+`;
 
 export const Body = ({ ships }) => {
   return (
@@ -12,6 +17,9 @@ export const Body = ({ ships }) => {
             <TableCell>{ship.port}</TableCell>
             <TableCell>{ship.name}</TableCell>
             <TableCell>{ship.class}</TableCell>
+            <TableCell>
+              <StyledButton variant="contained">Upload</StyledButton>
+            </TableCell>
           </TableRow>
         );
       })}

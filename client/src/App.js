@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Table, TableContainer, Paper } from "@mui/material";
-import axios from "axios";
-import { TableHeader } from "./Table/TableHead";
-import { Body } from "./Table/TableBody";
-import { Filters } from "./Filters/Filter";
+import { TableHeader } from "./components/Table/TableHead";
+import { Body } from "./components/Table/TableBody";
+import { Filters } from "./components/Filters/Filter";
+import { NetworkErrorMessage } from "./components/snackbar/Alert";
+
+import { getData } from "./components/axios";
 
 function App() {
   const [ships, setShips] = useState([]);
   const [weightFilter, setWeightFilter] = useState("");
   const [portFilter, setPortFilter] = useState("");
+  const [alert, setAlert] = useState(false);
 
   useEffect(() => {
     getAndUpdateShips();
@@ -26,16 +29,23 @@ function App() {
     getAndUpdateShips();
   };
 
+  const handleAlert = () => {
+    setAlert(false);
+  };
+
   const getAndUpdateShips = async () => {
+    let url = `/listShips`;
     if (weightFilter || portFilter) {
-      const result = await axios.get(
-        `http://localhost:4000/getShip?weight=${weightFilter}&port=${portFilter}`
-      );
+      url = `/getShip?weight=${weightFilter}&port=${portFilter}`;
+    }
+
+    try {
+      const result = await getData(url);
       setShips(result.data);
+    } catch (error) {
+      setAlert(true);
       return;
     }
-    const result = await axios.get("http://localhost:4000/listShips");
-    setShips(result.data);
   };
 
   if (!ships) {
@@ -45,6 +55,7 @@ function App() {
   return (
     ships && (
       <div>
+        <NetworkErrorMessage showAlert={alert} handleClose={handleAlert} />
         <Filters
           weightFilterChange={handleWeightFilterChange}
           portFilterChange={handlePortFilterChange}
