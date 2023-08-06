@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Table, TableContainer, Paper } from "@mui/material";
-import { TableHeader } from "./components/Table/TableHead";
-import { Body } from "./components/Table/TableBody";
-import { Filters } from "./components/Filters/Filter";
+import { TableHeader } from "./components/table/TableHead";
+import { Body } from "./components/table/TableBody";
+import { Filters } from "./components/filter/Filter";
 import { NetworkErrorMessage } from "./components/snackbar/Alert";
 
 import { getData } from "./components/axios";

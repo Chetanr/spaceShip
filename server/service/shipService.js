@@ -10,19 +10,22 @@ export const getShipService = async (weight, port, pageSize) => {
   const WHERE_CLAUSE = generateWhereClause(weight, port);
   const pageLimit = pageSize ?? 20;
 
-  const rows = await dbPool.query(
-    `SELECT * FROM ship ${WHERE_CLAUSE} LIMIT ${pageLimit}`
-  );
+  try {
+    const rows = await dbPool.query(
+      `SELECT * FROM ship ${WHERE_CLAUSE} LIMIT ${pageLimit}`
+    );
+    // if no data found in database, fetch data from api
+    if (rows && rows.length === 0) {
+      const apiResult = await getShipsFromApi();
+      updateShipsDataInDb(apiResult);
+    }
 
-  // if no data found in database, fetch data from api
-  if (rows && rows.length === 0) {
-    const apiResult = await getShipsFromApi();
-    updateShipsDataInDb(apiResult);
+    return await dbPool.query(
+      `SELECT * FROM ship ${WHERE_CLAUSE} LIMIT ${pageLimit}`
+    );
+  } catch (e) {
+    console.error(e);
   }
-
-  return await dbPool.query(
-    `SELECT * FROM ship ${WHERE_CLAUSE} LIMIT ${pageLimit}`
-  );
 };
 
 export const addShipService = async (shipDetails) => {

@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import { getShipService, updateShipWithImage } from "./service/shipService.js";
-import { validateRequestBody } from "./utils/validateRequest.js";
+import { validateUploadShipRequest } from "./utils/validateRequest.js";
 import cors from "cors";
 
 const app = express();
@@ -20,13 +20,14 @@ app.get("/listShips", async (req, res) => {
   res.status(200).json(shipsData);
 });
 
+// get a single ship based on weight and home port
 app.get("/getShip", async (req, res) => {
   const shipsData = await getShipService(req.query.weight, req.query.port);
   res.status(200).json(shipsData);
 });
 
 // upload a ship data with image
-app.post("/ship", validateRequestBody, async (req, res) => {
+app.post("/ship", validateUploadShipRequest, async (req, res) => {
   const { result } = await updateShipWithImage(req.body);
   res.status(200).json({
     result,
